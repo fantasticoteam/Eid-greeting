@@ -1,8 +1,8 @@
-# 🌙 EidWish AI — Interactive Eid ul-Adha Greeting
+# 🌙 Eid Greetings — Interactive Eid al-Adha Cards
 
 An elegant, mobile-responsive web experience designed to generate and share beautiful, personalized Eid al-Adha greetings in seconds. Built entirely on the client side with a premium dark emerald and gold aesthetic, this application serves as a modern tool for sharing festive blessings across social platforms.
 
-🌐 **Live Demo:**
+🌐 **Live Demo:** `https://yourusername.github.io/eid/` *(Replace with your actual GitHub link)*
 
 ---
 
@@ -22,7 +22,7 @@ This is a **serverless, client-side application** designed to run with zero exte
 
 *   **Frontend:** Semantic HTML5, Vanilla JavaScript (ES6+), and fluid CSS3 transitions.
 *   **Graphics:** HTML5 Canvas API managing an abstract ambient particle system.
-*   **Libraries:** `html2canvas` (via CDN) for local, client-side client rendering of the downloadable card asset.
+*   **Libraries:** `html2canvas` (via CDN) for local, client-side rendering of the downloadable card asset.
 
 ---
 
@@ -42,4 +42,4 @@ To launch this project live on your own GitHub profile:
 
 ## 📄 License
 
-This project is open-source and free to use. Made with ❤️ for Eid ul-Adha.
+This project is open-source and free to use. Made with ❤️ for Eid al-Adha.
