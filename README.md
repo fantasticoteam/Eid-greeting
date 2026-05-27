@@ -2,7 +2,7 @@
 
 An elegant, mobile-responsive web experience designed to generate and share beautiful, personalized Eid al-Adha greetings in seconds. Built entirely on the client side with a premium dark emerald and gold aesthetic, this application serves as a modern tool for sharing festive blessings across social platforms.
 
-🌐 **Live Demo:** `https://yourusername.github.io/eid/` *(Replace with your actual GitHub link)*
+🌐 **Live Demo:** *https://fantasticoteam.github.io/Eid-greeting/*
 
 ---
 
