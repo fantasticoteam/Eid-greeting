@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cinematic Eid Experience</title>
+    <style>
+        /* Modern Cinematic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100vh;
+            background-color: #02040a;
+            font-family: 'Georgia', serif;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* --------------------------------------
+           THEATRICAL CURTAINS (Intro Scene)
+           -------------------------------------- */
+        .curtain-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999;
+            display: flex;
+            pointer-events: none;
+        }
+
+        .curtain {
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, #010b13 0%, #071926 100%);
+            transition: transform 3s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.95);
+        }
+
+        .curtain.left { border-right: 2px solid rgba(212, 175, 55, 0.4); transform-origin: left; }
+        .curtain.right { background: linear-gradient(270deg, #010b13 0%, #071926 100%); border-left: 2px solid rgba(212, 175, 55, 0.4); transform-origin: right; }
+        
+        .center-glow {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 100%;
+            background: #fff;
+            box-shadow: 0 0 30px 10px #ffd700, 0 0 60px 20px #2dd4bf;
+            z-index: 10000; transition: opacity 1.5s ease;
+        }
+
+        .curtain-container.open .curtain.left { transform: translateX(-100%); }
+        .curtain-container.open .curtain.right { transform: translateX(100%); }
+        .curtain-container.open .center-glow { opacity: 0; }
+
+        /* --------------------------------------
+           CINEMATIC BACKGROUND & CAMERA MOVES
+           -------------------------------------- */
+        .cinematic-bg {
+            position: fixed;
+            top: -5%; left: -5%; width: 110%; height: 110%;
+            background: radial-gradient(circle at 50% 40%, #0b1528 0%, #010408 100%);
+            z-index: 0;
+            animation: slowCameraPan 30s linear infinite alternate;
+            transition: filter 1s ease;
+        }
+
+        .ambient-stars {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.6"/><circle cx="280" cy="120" r="1" fill="white" opacity="0.4"/><circle cx="120" cy="310" r="2" fill="white" opacity="0.7"/><circle cx="340" cy="240" r="1" fill="white" opacity="0.3"/></svg>') repeat;
+            opacity: 0.5;
+        }
+
+        @keyframes slowCameraPan {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.05) translate(-10px, -10px); }
+        }
+
+        /* --------------------------------------
+           MAIN STAGE & INTERACTIVE MOON
+           -------------------------------------- */
+        .stage {
+            position: relative;
+            z-index: 1;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            opacity: 0; transform: scale(0.9);
+            transition: opacity 3s ease 1s, transform 3s ease 1s, filter 1s ease;
+        }
+
+        .curtain-container.open ~ .stage { opacity: 1; transform: scale(1); }
+
+        /* Dimming effect when card opens */
+        .stage.dimmed {
+            filter: brightness(0.3) blur(4px);
+            pointer-events: none;
+        }
+        .cinematic-bg.dimmed {
+            filter: brightness(0.2);
+        }
+
+        .interactive-moon-container {
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 20px;
+            animation: floatMoon 6s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        .moon-emoji {
+            font-size: 5rem;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+            transition: all 0.5s ease;
+        }
+
+        .interactive-moon-container:hover .moon-emoji {
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+            transform: scale(1.1);
+        }
+
+        /* Scatters stars dynamically when clicked */
+        .scatter-star {
+            position: absolute;
+            font-size: 1rem;
+            color: #ffd700;
+            pointer-events: none;
+            animation: scatterAnim 1s ease-out forwards;
+        }
+
+        @keyframes scatterAnim {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(180deg); opacity: 0; }
+        }
+
+        @keyframes floatMoon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .gold-foil {
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-shadow: 0 4px 20px rgba(186, 137, 30, 0.3);
+            text-align: center;
+        }
+
+        .title-ar { font-size: 2.8rem; font-family: 'Arial', sans-serif; font-weight: bold; margin-bottom: 5px; }
+        .title-en { font-size: 1.8rem; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 5px; }
+        .instruction { font-size: 0.8rem; color: #9ca3af; letter-spacing: 3px; text-transform: uppercase; margin-top: 20px; animation: pulseOp 2s infinite; }
+
+        @keyframes pulseOp { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* --------------------------------------
+           FLOATING ANIMALS (Around the screen)
+           -------------------------------------- */
+        .animal-orb {
+            position: absolute;
+            font-size: 2.5rem;
+            cursor: pointer;
+            width: 70px; height: 70px;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255,215,0,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5;
+        }
+
+        .animal-orb:hover {
+            transform: scale(1.2);
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        /* Positions mimicking an orbit around the center */
+        .orb-goat { top: 20%; left: 15%; animation: floatOrb 5s ease-in-out infinite 0s; }
+        .orb-camel { top: 20%; right: 15%; animation: floatOrb 6s ease-in-out infinite 1s; }
+        .orb-sheep { bottom: 25%; left: 20%; animation: floatOrb 7s ease-in-out infinite 2s; }
+        .orb-bull { bottom: 25%; right: 20%; animation: floatOrb 5.5s ease-in-out infinite 1.5s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Responsive placement for smaller mobile screens */
+        @media (max-width: 600px) {
+            .orb-goat { top: 15%; left: 10%; }
+            .orb-camel { top: 15%; right: 10%; }
+            .orb-sheep { bottom: 20%; left: 10%; }
+            .orb-bull { bottom: 20%; right: 10%; }
+        }
+
+        /* --------------------------------------
+           LUXURIOUS GLASSMORPHISM CARD
+           -------------------------------------- */
+        .card-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 5000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .card-overlay.active {
+            opacity: 1; pointer-events: all;
+        }
+
+        .glass-card {
+            position: relative;
+            width: 90%; max-width: 400px;
+            background: linear-gradient(135deg, rgba(20, 25, 35, 0.6), rgba(5, 10, 15, 0.8));
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 25px;
+            padding: 50px 30px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(255, 215, 0, 0.1);
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .card-overlay.active .glass-card {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Glowing Border Animation */
+        .glass-card::before {
+            content: ''; position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(255,215,0,0.3), transparent 30%);
+            animation: spinGlow 6s linear infinite;
+            z-index: -1;
+        }
+        @keyframes spinGlow { 100% { transform: rotate(360deg); } }
+
+        .card-close {
+            position: absolute; top: 20px; right: 25px;
+            font-size: 1.5rem; color: #a1a1aa; cursor: pointer;
+            transition: color 0.3s;
+        }
+        .card-close:hover { color: #fff; }
+
+        .card-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        .card-dua {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.2rem;
+            color: #ffd700;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            opacity: 0; transform: translateY(10px);
+            transition: all 1s ease 0.3s;
+        }
+
+        .card-eng {
+            font-size: 1rem;
+            color: #d1d5db;
+            line-height: 1.6;
+            opacity: 0; transform: translateY(10px);
+            transition: all 1s ease 0.6s;
+        }
+
+        .card-overlay.active .card-dua, .card-overlay.active .card-eng {
+            opacity: 1; transform: translateY(0);
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Floating particles inside the card */
+        .particle {
+            position: absolute;
+            color: rgba(255, 215, 0, 0.6);
+            font-size: 0.8rem;
+            pointer-events: none;
+            animation: floatUp 4s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100px) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theatrical Curtains -->
+    <div class="curtain-container" id="curtains">
+        <div class="curtain left"></div>
+        <div class="center-glow"></div>
+        <div class="curtain right"></div>
+    </div>
+
+    <!-- Background Camera Move -->
+    <div class="cinematic-bg" id="cinematicBg">
+        <div class="ambient-stars"></div>
+    </div>
+
+    <!-- Main Stage -->
+    <div class="stage" id="mainStage">
+        
+        <div class="interactive-moon-container" onclick="clickMoon(this)">
+            <div class="moon-emoji" id="mainMoon">🌙</div>
+        </div>
+
+        <div class="title-ar gold-foil">عيد الأضحى المبارك</div>
+        <div class="title-en gold-foil">Eid Mubarak</div>
+        
+        <div class="instruction">Tap the Moon & Animals</div>
+
+        <!-- Animals Floating Around -->
+        <div class="animal-orb orb-goat" onclick="openCard('🐐', 'تقبل الله طاعتكم وصالح أعمالكم', 'May your sacrifice be accepted and your sincerity rewarded.')">🐐</div>
+        <div class="animal-orb orb-camel" onclick="openCard('🐪', 'اللهم بارك لكم في عيدكم', 'May Allah bless your Eid with boundless patience and divine grace.')">🐪</div>
+        <div class="animal-orb orb-sheep" onclick="openCard('🐑', 'عيدكم مبارك وكل عام وأنتم بخير', 'May this Eid bring enduring peace and joy to you and your family.')">🐑</div>
+        <div class="animal-orb orb-bull" onclick="openCard('🐂', 'نسأل الله أن يمدكم بالقوة والإيمان', 'May your faith be strengthened and your devotion honored.')">🐂</div>
+    </div>
+
+    <!-- Glassmorphism Card Overlay -->
+    <div class="card-overlay" id="cardOverlay">
+        <div class="glass-card" id="glassCard">
+            <div class="card-close" onclick="closeCard()">✕</div>
+            
+            <div class="card-emoji" id="cardEmoji">✨</div>
+            <div class="card-dua" id="cardDua">Arabic Dua</div>
+            <div class="card-eng" id="cardEng">English Translation</div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Auto-Open Curtains
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('curtains').classList.add('open');
+            }, 800);
+        };
+
+        // 2. Moon Interaction (Audio removed)
+        let moonClicked = false;
+        const mainMoon = document.getElementById('mainMoon');
+
+        function clickMoon(container) {
+            // Visual Moon Logic
+            if (!moonClicked) {
+                moonClicked = true;
+                mainMoon.style.filter = "drop-shadow(0 0 60px rgba(255, 255, 255, 1))";
+            } else {
+                mainMoon.style.transform = "scale(1.2)";
+                setTimeout(() => mainMoon.style.transform = "scale(1)", 200);
+            }
+
+            // Scatter Stars Animation
+            for(let i=0; i<8; i++) {
+                const star = document.createElement('div');
+                star.innerHTML = ['✨', '⭐', '🌟'][Math.floor(Math.random() * 3)];
+                star.className = 'scatter-star';
+                
+                // Random scatter direction
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 80 + Math.random() * 100;
+                star.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                star.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                
+                // Center relative to moon
+                star.style.left = '40%';
+                star.style.top = '40%';
+                
+                container.appendChild(star);
+                
+                // Remove element after animation
+                setTimeout(() => star.remove(), 1000);
+            }
+        }
+
+        // 3. Animal Card Logic
+        const overlay = document.getElementById('cardOverlay');
+        const stage = document.getElementById('mainStage');
+        const bg = document.getElementById('cinematicBg');
+        const glassCard = document.getElementById('glassCard');
+
+        function openCard(emoji, arabic, english) {
+            document.getElementById('cardEmoji').innerText = emoji;
+            document.getElementById('cardDua').innerText = arabic;
+            document.getElementById('cardEng').innerText = english;
+            
+            // Dim background for focus
+            stage.classList.add('dimmed');
+            bg.classList.add('dimmed');
+            
+            // Show Card
+            overlay.classList.add('active');
+
+            // Generate particles inside card
+            generateParticles();
+        }
+
+        function closeCard() {
+            overlay.classList.remove('active');
+            stage.classList.remove('dimmed');
+            bg.classList.remove('dimmed');
+            
+            // Clear particles
+            const particles = glassCard.querySelectorAll('.particle');
+            particles.forEach(p => p.remove());
+        }
+
+        function generateParticles() {
+            for(let i=0; i<10; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.innerHTML = ['🌙', '✨', '⭐'][Math.floor(Math.random() * 3)];
+                p.style.left = `${Math.random() * 100}%`;
+                p.style.bottom = `${-20 + Math.random() * 40}px`;
+                p.style.animationDelay = `${Math.random() * 2}s`;
+                p.style.opacity = '0';
+                glassCard.appendChild(p);
+            }
+        }
+    </script>
+</body>
+</html
